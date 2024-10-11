@@ -1,0 +1,18 @@
+﻿@using BlazorApp1.Models;
+@foreach (var item in Items.Where(i => i.ParentID == ParentID))
+{
+        <li>@item.Name
+        @if (Items.Where(c => c.ParentID == item.ID).Any())
+        {
+                   <ul>
+                       <RecursiveUI ParentID="item.ID"/>
+                   </ul>
+        }
+        </li>
+}
+@code {
+    [Parameter]
+    public int? ParentID { get; set; }
+    [CascadingParameter]
+    List<Element> Items { get; set; }
+}

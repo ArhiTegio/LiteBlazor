@@ -1,0 +1,53 @@
+﻿@page "/"
+@using BlazorApp1.Models;
+@using BlazorApp1.Sheduler;
+
+@implements IDisposable
+@inject IJSRuntime jsRuntime
+
+<PageTitle>Index</PageTitle>
+
+
+<CascadingValue Value="Items">
+    <ul>
+        <RecursiveUI ParentID="null" />
+    </ul>
+</CascadingValue>
+
+@code {
+    List<Element> Items;
+    protected override void OnInitialized()
+    {
+        Items = Values.Tree;
+
+        Values.ChangeStates += Changed;
+    }
+
+    private void Changed(object? sender, EventArgs e)
+    {
+        InvokeAsync(this.StateHasChanged);
+    }
+
+    void IDisposable.Dispose()
+    {
+        Values.ChangeStates -= Changed;
+    }
+}
+
+<RadzenButton Click="@ButtonClicked" Text="Обновить"></RadzenButton>
+@code {
+    void ButtonClicked()
+    {
+        Items.Clear();        
+        Items.Add(new Element { ID=1, Name="1", ParentID = null});
+        Items.Add(new Element { ID=2, Name="1.1", ParentID = 1});
+        Items.Add(new Element { ID=3, Name="1.2", ParentID = 1});
+        Items.Add(new Element { ID=4, Name="1.2.1", ParentID = 3});
+        Items.Add(new Element { ID=5, Name="2", ParentID = null});
+        Items.Add(new Element { ID=6, Name="2.1", ParentID = 5});
+        Items.Add(new Element { ID=7, Name="2.2", ParentID = 5});
+        Items.Add(new Element { ID=8, Name="3", ParentID = null});
+        Items.Add(new Element { ID=9, Name="3.1", ParentID = 8});
+        Items.Add(new Element { ID=10, Name="3.2", ParentID = 8});
+    }
+}
